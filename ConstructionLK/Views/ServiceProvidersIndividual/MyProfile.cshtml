@@ -7,179 +7,148 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="well"><h2>@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h2></div>
+<div class="well">
+    <h2>@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h2>
 
+    <div>
+        @if ((Model.Avatar == null))
+        {
+            <img src="~/Resources/ProfilePicturesSP/Default.png" alt="Profile Picture" height="200" width="200" align="right" />
+        }
+
+        @if ((Model.Avatar != null))
+        {
+            <img src=@Url.Content(Model.Avatar) alt="Profile Picture" height="200" width="200" align="right" />
+        }
+
+    </div>
+</div>
+
+@if (Model.ApplicationUserId == User.Identity.GetUserId())
+{
+    <div class="alert alert-dismissible alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>New Requests!</h4><strong>
+            Access them now. @Html.ActionLink("Click Here", "MyRequests", "ItemRequests", new { user = User.Identity.GetUserId() }, null)
+        </strong>
+    </div>
+    <div class="col-md-2">
+        @Html.ActionLink("Accepted Item requests", "MyAcceptedRequests", "ItemRequests", new { user = User.Identity.GetUserId() }, null)
+    </div>
+}
 <div>
     <span class="label label-warning">Service Provider</span>
     <span class="label label-primary">Individual</span>
     <span class="label label-info">Member since @Html.Label(Model.CreatedDate.Value.ToString("y"))</span>
-    <div class="btn-group open">
-        <a class="btn btn-default" @Html.ActionLink("Edit", "Edit", new { id = Model.Id })><span></span> </a>
-        <a class="btn btn-default dropdown-toggle" aria-expanded="true" data-toggle="dropdown"><span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            <li>@Html.ActionLink("View Your Items", "Index", "Items", new { id = Model.Id }, null)</li>
-            <li>@Html.ActionLink("Add New Item", "Create", "Items", new { id = Model.Id }, null)</li>
-            <li>@Html.ActionLink("View Your Requests", "Index", new { id = Model.Id })</li>
-            <li class="divider"></li>
-            <li>@Html.ActionLink("Home", "Index", "Home", new { id = Model.ApplicationUserId }, null)</li>
-        </ul>
-    </div>
     <hr />
+    @if (Model.TypeId == 3)
+    {
+        @Html.ActionLink("Make Complaint", "Create", "Complains", new { user = Model.AspNetUser.Id }, new { @class = "btn btn-primary btn-xs" })
+    }
 
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.MembershipType.Name)
-        </dt>
+    @if (Model.ApplicationUserId == User.Identity.GetUserId())
+    {
+        @Html.ActionLink("New Post", "Create", "BlogPosts", new { user = User.Identity.GetUserId() }, null)
+        <strong>&nbsp;|&nbsp;</strong>
+            @Html.ActionLink("New Item", "Create", "Items", new { user = User.Identity.GetUserId() }, null)
 
-        <dd>
-            @Html.DisplayFor(model => model.MembershipType.Name)
-        </dd>
+    }
+    @if (!(Model.ApplicationUserId == User.Identity.GetUserId()))
+    {
+        @Html.ActionLink("View Available Items", "Index", "Items", new { user = Model.AspNetUser.Id }, new { @class = "btn btn-primary btn-xs" })
+    }
+</div>
+<div class="col-md-3">
+    <ul class="list-group">
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayName("E-Mail")
+            </strong>
+            |@Html.DisplayFor(model => model.Username)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayName("Near by Town")
+            </strong>
+            |@Html.DisplayFor(model => model.BasedCity)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayName("Postal Address")
+            </strong>
+            |@Html.DisplayFor(model => model.MailingAddress)
+        </li>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ServiceProviderType.Type)
-        </dt>
+        <li class="list-group-item">
 
-        <dd>
-            @Html.DisplayFor(model => model.ServiceProviderType.Type)
-        </dd>
+            @if (Model.ApplicationUserId == User.Identity.GetUserId())
+            {
+                <strong>
+                    @Html.DisplayName("Our Bio")
+                </strong>
+            }
+            @if (!(Model.ApplicationUserId == User.Identity.GetUserId()))
+            {
+                <strong>
+                    @Html.DisplayName("Service Provider Bio")
+                </strong>
+            }
+            |@Html.DisplayFor(model => model.Bio)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayNameFor(model => model.Telephone)
+            </strong>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Username)
-        </dt>
+            |@Html.DisplayFor(model => model.Telephone)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </strong>
 
-        <dd>
-            @Html.DisplayFor(model => model.Username)
-        </dd>
+            |@Html.DisplayFor(model => model.FirstName)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayNameFor(model => model.LastName)
+            </strong>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.BasedCity)
-        </dt>
+            |@Html.DisplayFor(model => model.LastName)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayName("Date Incorporation")
+            </strong>
 
-        <dd>
-            @Html.DisplayFor(model => model.BasedCity)
-        </dd>
+            |@Html.DisplayFor(model => model.StartedDate)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayNameFor(model => model.DateOfBirth)
+            </strong>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.MailingAddress)
-        </dt>
+            |@Html.DisplayNameFor(model => model.DateOfBirth)
+        </li>
+        <li class="list-group-item">
+            <strong>
+                @Html.DisplayNameFor(model => model.Status.Name)
+            </strong>
 
-        <dd>
-            @Html.DisplayFor(model => model.MailingAddress)
-        </dd>
+            |@Html.DisplayNameFor(model => model.Status.Name)
+        </li>
+        @*show ratings*@
+        @*<li class="list-group-item">
+                <strong>
+                    Ratings
+                </strong>
+                @Html.Partial("_LoginPartial")
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Bio)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Bio)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.DateOfBirth)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.DateOfBirth)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Telephone)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Telephone)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CompanyName)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CompanyName)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CompanyRegNo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CompanyRegNo)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.StartedDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.StartedDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Avatar)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Avatar)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedBy)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreatedBy)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreatedDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ModifiedBy)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ModifiedBy)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ModifiedDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ModifiedDate)
-        </dd>
-
-    </dl>
+            </li>*@
+        <li class="list-group-item">
+            Last Modified On | @Html.LabelFor(model => model.ModifiedDate)
+        </li>
+    </ul>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |

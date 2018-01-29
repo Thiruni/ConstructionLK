@@ -18,6 +18,7 @@ namespace ConstructionLK.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Post Content")]
         public string PostContent { get; set; }
 
         public int? Status { get; set; }
@@ -31,9 +32,9 @@ namespace ConstructionLK.Models
         public DateTime? ModifiedDate { get; set; }
 
         public int UserId { get; set; }
-
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
-
+        [Display(Name = "Category")]
         public virtual BlogCategory BlogCategory { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

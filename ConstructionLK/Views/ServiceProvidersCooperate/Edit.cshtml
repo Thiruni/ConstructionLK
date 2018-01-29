@@ -95,7 +95,7 @@
 }
 
 <div class="btn btn-outline-warning btn-sm">
-    @Html.ActionLink("Back to Profile", "MyProfile", new { id = User.Identity.GetUserId() })|
+    @Html.ActionLink("Back to Profile", "MyProfile", "ServiceProvidersCooperate", new { id = User.Identity.GetUserId() }, null)|
     @Html.ActionLink("Back to Home", "Index", "Home")
 </div>
 

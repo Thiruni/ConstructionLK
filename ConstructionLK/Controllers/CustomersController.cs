@@ -17,15 +17,15 @@ namespace ConstructionLK.Controllers
     {
         private ConstructionLKContext db = new ConstructionLKContext();
 
-        public ActionResult MyProfile(string id)
+        public ActionResult MyProfile(string user)
         {
-            if (id == null)
+            if (user == null)
             {
                 //return RedirectToAction("MyProfile", "Customers", new { id = customer.Id });
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             //Customer customer = db.Customers.Find(id);
-            Customer customer = db.Customers.SingleOrDefault(c => c.ApplicationUserId == id);
+            Customer customer = db.Customers.SingleOrDefault(c => c.ApplicationUserId == user);
             if (customer == null)
             {
                 return HttpNotFound();

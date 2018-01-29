@@ -24,14 +24,18 @@ namespace ConstructionLK.Models
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Item Name")]
         public string ItemName { get; set; }
 
         [StringLength(50)]
+        [Display(Name = "Item Code")]
         public string ItemCode { get; set; }
 
+        [Display(Name = "Item Description")]
         public string Description { get; set; }
 
         public int? StatusId { get; set; }
+        [Display(Name = "Availability")]
         public virtual ItemStatus ItemStatus { get; set; }
 
         public int? CreatedBy { get; set; }
@@ -42,8 +46,10 @@ namespace ConstructionLK.Models
 
         public DateTime? ModifiedDate { get; set; }
 
+        [Display(Name = "Item Sub Category")]
         public int SubCategoryId { get; set; }
 
+        [Display(Name = "Item Type")]
         public int TypeId { get; set; }
 
         public int UserId { get; set; }

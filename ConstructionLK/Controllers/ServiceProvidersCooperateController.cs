@@ -15,24 +15,24 @@ namespace ConstructionLK.Controllers
     public class ServiceProvidersCooperateController : Controller
     {
         private ConstructionLKContext db = new ConstructionLKContext();
-        public ActionResult MyProfile(string id)
+        public ActionResult MyProfile(string user)
         {
-            if (id == null)
+            if (user == null)
             {
                 //return RedirectToAction("MyProfile", "Customers", new { id = customer.Id });
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             //Customer customer = db.Customers.Find(id);
-            ServiceProvider serviceProvider = db.ServiceProviders.SingleOrDefault(sp => sp.ApplicationUserId == id);
+            ServiceProvider serviceProvider = db.ServiceProviders.SingleOrDefault(sp => sp.ApplicationUserId == user);
             if (serviceProvider == null)
             {
                 return HttpNotFound();
             }
-            if ((!User.IsInRole(RoleName.Customer) || !User.IsInRole(RoleName.CanManageAll) || !User.IsInRole(RoleName.ServiceProvider)))
-            {
-                //no role
-                RedirectToAction("Index", "UserSelector");
-            }
+            //if ((!User.IsInRole(RoleName.Customer) || !User.IsInRole(RoleName.CanManageAll) || !User.IsInRole(RoleName.ServiceProvider)))
+            //{
+            //    //no role
+            //    RedirectToAction("Index", "UserSelector");
+            //}
             //var principal = (RolePrincipal)User;
             //if (!principal.GetRoles().Any())
             //{
@@ -135,7 +135,7 @@ namespace ConstructionLK.Controllers
                         ApplicationUserId = serviceProvider.ApplicationUserId
                     });
                     db.SaveChanges();
-                    return RedirectToAction("MyProfile", "ServiceProvidersCooperate", new { id = User.Identity.GetUserId() });
+                    return RedirectToAction("MyProfile", "ServiceProvidersCooperate", new { user = User.Identity.GetUserId() });
                 }
             }
             else
@@ -154,7 +154,7 @@ namespace ConstructionLK.Controllers
                         Console.WriteLine(e);
                         throw;
                     }
-                    return RedirectToAction("MyProfile", "ServiceProvidersCooperate", new { id = User.Identity.GetUserId() });
+                    return RedirectToAction("MyProfile", "ServiceProvidersCooperate", new { user = User.Identity.GetUserId() });
                     //return RedirectToAction("Index");
                 }
             }
@@ -196,7 +196,7 @@ namespace ConstructionLK.Controllers
             {
                 db.Entry(serviceProvider).State = EntityState.Modified;
                 db.SaveChanges();
-                            return RedirectToAction("MyProfile", "ServiceProvidersCooperate", new { id = User.Identity.GetUserId() });
+                            return RedirectToAction("MyProfile", "ServiceProvidersCooperate", new { user = User.Identity.GetUserId() });
             }
             ViewBag.StatusId = new SelectList(db.Statuses, "Id", "Name", serviceProvider.StatusId);
 

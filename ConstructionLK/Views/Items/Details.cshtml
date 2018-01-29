@@ -1,4 +1,5 @@
-﻿@model ConstructionLK.Models.Item
+﻿@using Microsoft.AspNet.Identity
+@model ConstructionLK.Models.Item
 
 @{
     ViewBag.Title = "Details";
@@ -125,7 +126,8 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-outline-warning btn-sm" }) |
-    @Html.ActionLink("Back to List", "Index",null, new { @class = "btn btn-outline-warning btn-sm" })|
+    @Html.ActionLink("Back to List", "MyProducts", "Items", new { user = User.Identity.GetUserId() }, new { @class = "btn btn-outline-warning btn-sm" })
+    @*@Html.ActionLink("Back to List", "MyProducts", "Items", new { user = User.Identity.GetUserId() }, null, new { @class = "btn btn-outline-warning btn-sm" })|*@
     @Html.ActionLink("Add Properties", "Create", "ItemProperties", new { iid = Model.Id }, new { @class = "btn btn-outline-warning btn-sm" })
     @Html.ActionLink("Add Locations", "Create", "ItemLocations", new { iid = Model.Id }, new { @class = "btn btn-outline-warning btn-sm" })
     @Html.ActionLink("Add Pictures", "Upload", "ItemImages", new { id = Model.Id }, new { @class = "btn btn-outline-warning btn-sm" })

@@ -9,32 +9,33 @@ using System.Web.Mvc;
 using ConstructionLK.Models;
 using Microsoft.AspNet.Identity;
 using System.IO;
+using System.Data.Entity.Validation;
 
 namespace ConstructionLK.Controllers
 {
     public class ServiceProvidersIndividualController : Controller
     {
         private ConstructionLKContext db = new ConstructionLKContext();
-        public ActionResult MyProfile(string id)
+        public ActionResult MyProfile(string user)
         {
             //using (ConstructionLKContext db = new ConstructionLKContext())
             //{
-            if (id == null)
+            if (user == null)
             {
                 //return RedirectToAction("MyProfile", "Customers", new { id = customer.Id });
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             //Customer customer = db.Customers.Find(id);
-            ServiceProvider serviceProvider = db.ServiceProviders.SingleOrDefault(sp => sp.ApplicationUserId == id);
+            ServiceProvider serviceProvider = db.ServiceProviders.SingleOrDefault(sp => sp.ApplicationUserId == user);
             if (serviceProvider == null)
             {
                 return HttpNotFound();
             }
-            if ((!User.IsInRole(RoleName.Customer) || !User.IsInRole(RoleName.CanManageAll) || !User.IsInRole(RoleName.ServiceProvider)))
-            {
-                //no role
-                RedirectToAction("Index", "UserSelector");
-            }
+            //if ((!User.IsInRole(RoleName.Customer) || !User.IsInRole(RoleName.CanManageAll) || !User.IsInRole(RoleName.ServiceProvider)))
+            //{
+            //    //no role
+            //    RedirectToAction("Index", "UserSelector");
+            //}
             //var principal = (RolePrincipal)User;
             //if (!principal.GetRoles().Any())
             //{
@@ -125,13 +126,32 @@ namespace ConstructionLK.Controllers
                         ModifiedBy = serviceProvider.ModifiedBy,
                         ModifiedDate = serviceProvider.ModifiedDate,
                         TypeId = serviceProvider.TypeId,
-                        CompanyName = serviceProvider.CompanyName,
-                        CompanyRegNo = serviceProvider.CompanyRegNo,
+                        //CompanyName = serviceProvider.CompanyName,
+                        //CompanyRegNo = serviceProvider.CompanyRegNo,
                         ApplicationUserId = serviceProvider.ApplicationUserId
                     }/*serviceProvider*/);
-                    db.SaveChanges();
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (DbEntityValidationException e)
+                    {
+                        foreach (var eve in e.EntityValidationErrors)
+                        {
+                            Console.WriteLine(">>>>>>Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                                eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                            foreach (var ve in eve.ValidationErrors)
+                            {
+                                Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                                    ve.PropertyName, ve.ErrorMessage);
+                            }
+                        }
+                        throw e;
+
+                    }
+                    
                     //return RedirectToAction("Index");
-                    return RedirectToAction("MyProfile", "ServiceProvidersIndividual", new { id = User.Identity.GetUserId() });
+                    return RedirectToAction("MyProfile", "ServiceProvidersIndividual", new { user = User.Identity.GetUserId() });
                 }
             }
             else
@@ -150,7 +170,7 @@ namespace ConstructionLK.Controllers
                         Console.WriteLine(e);
                         throw;
                     }
-                    return RedirectToAction("MyProfile", "ServiceProvidersIndividual", new { id = User.Identity.GetUserId() });
+                    return RedirectToAction("MyProfile", "ServiceProvidersIndividual", new { user = User.Identity.GetUserId() });
                     //return RedirectToAction("Index");
                 }
             }
@@ -199,7 +219,7 @@ namespace ConstructionLK.Controllers
             {
                 db.Entry(serviceProvider).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("MyProfile", "ServiceProvidersIndividual", new { id = User.Identity.GetUserId() });
+                return RedirectToAction("MyProfile", "ServiceProvidersIndividual", new { user = User.Identity.GetUserId() });
             }
             ViewBag.StatusId = new SelectList(db.Statuses, "Id", "Name", serviceProvider.StatusId);
 

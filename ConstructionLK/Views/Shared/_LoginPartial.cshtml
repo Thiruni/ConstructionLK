@@ -21,14 +21,13 @@
                     <li>@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", null, null, null,null)</li>
                     @*<li>@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", new { area = "" }, htmlAttributes: new { title = "Manage" })</li>*@
                     <li>@Html.ActionLink("Account", "Edit", "UserSelector", new { area = "",user = User.Identity.GetUserId() }, htmlAttributes: new { title = "Manage" })</li>
-
-                    <li class="divider"></li>
-                    <li>@Html.ActionLink("Profile", "UserProfile", "UserSelector", new { area = "" }, null)</li>
                     @if (User.IsInRole(RoleName.ServiceProvider))
                     {
                         <li class="divider"></li>
                         <li>@Html.ActionLink("My Products and Services", "MyProducts", "Items", new { user = User.Identity.GetUserId() }, null)</li>
                     }
+                    <li class="divider"></li>
+                    <li>@Html.ActionLink("Profile", "UserProfile", "UserSelector", new { area = "" }, null)</li>
                 </ul>
             </li>
             @*<li>

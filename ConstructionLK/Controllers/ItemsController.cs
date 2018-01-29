@@ -9,6 +9,8 @@ using System.Web.Mvc;
 using ConstructionLK.Models;
 using System.Collections.Specialized;
 using System.Configuration;
+using Microsoft.AspNet.Identity;
+
 namespace ConstructionLK.Controllers
 {
     public class ItemsController : Controller
@@ -110,7 +112,7 @@ namespace ConstructionLK.Controllers
             ViewBag.StatusId = new SelectList(db.ItemStatus, "Id", "Name", item.StatusId);
             ViewBag.SubCategoryId = new SelectList(db.ItemSubCategories, "Id", "Name", item.SubCategoryId);
             ViewBag.TypeId = new SelectList(db.ItemTypes, "Id", "Type", item.TypeId);
-            ViewBag.UserId = new SelectList(db.ServiceProviders, "Id", "Username", item.UserId);
+            ViewBag.UserId = id;
             return View(item);
         }
 
@@ -125,7 +127,7 @@ namespace ConstructionLK.Controllers
             {
                 db.Entry(item).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("MyProducts", new { user = User.Identity.GetUserId() });
             }
             ViewBag.StatusId = new SelectList(db.ItemStatus, "Id", "Name", item.StatusId);
             ViewBag.SubCategoryId = new SelectList(db.ItemSubCategories, "Id", "Name", item.SubCategoryId);
@@ -177,7 +179,8 @@ namespace ConstructionLK.Controllers
             var appuser = db.ServiceProviders.SingleOrDefault(u => u.ApplicationUserId == user);
             var items = db.Items.Include(i => i.ItemSubCategory).Include(i => i.ItemType).Include(i => i.ServiceProvider).Include(i => i.ItemStatus).Include(i => i.PublishedItems).Where(i => i.UserId == appuser.Id);
             //var items = db.Items.Include(i => i.ItemSubCategory).Include(i => i.ItemType).Include(i => i.ServiceProvider);
-
+            //ViewBag.apuser= db.ServiceProviders.SingleOrDefault(u => u.ApplicationUserId == user).Id;
+            ViewBag.user = user;
             if (User.IsInRole(RoleName.CanManageAll))
                 return View(items.ToList());
 

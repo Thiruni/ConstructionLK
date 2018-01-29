@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using ConstructionLK.Models;
 using System.Collections.Specialized;
 using System.Configuration;
+using Microsoft.AspNet.Identity;
 
 namespace ConstructionLK.Controllers
 {
@@ -61,19 +62,73 @@ namespace ConstructionLK.Controllers
             }
             return View(itemRequest);
         }
-        public ActionResult MyRequests(int? id)
+        // GET: MyItemRequests/Index
+        public ActionResult MyRequests(string user)
         {
-            if (id == null)
+            var appuser = db.ServiceProviders.SingleOrDefault(s => s.ApplicationUserId == user).Id;
+            // var customer=db.Customers.SingleOrDefault(c => c.ApplicationUserId == user).Username;
+            var itemsRequests = db.ItemRequests.Include(i => i.Customer).Include(i => i.Item).Include(i => i.Location).Where(i => i.ServiceProviderId == appuser).Where(i => i.StatusId == 1);
+
+            if (User.IsInRole(RoleName.CanManageAll))
+                return View(itemsRequests.ToList());
+            if (itemsRequests == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return View("NothingToShow");
             }
-            var itemRequests = db.ItemRequests.Where(i=>i.ServiceProviderId == id).ToList();
-            if (itemRequests == null)
-            {
-                return HttpNotFound();
-            }
-            return View(itemRequests);
+            return View("MyRequests", itemsRequests.ToList());
         }
+
+        // GET: RespondMyRequests/Respond
+        //public ActionResult Respond(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    ItemRequest itemRequest = db.ItemRequests.Find(id);
+        //    if (itemRequest == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+
+        //    ViewBag.StatusId = new SelectList(db.ItemRequestStatuses, "Id", "Name", itemRequest.StatusId);
+
+        //    //ViewBag.CustomerId = itemRequest.CustomerId;
+        //    //ViewBag.CustomerId = itemRequest.ItemId;
+        //    //ViewBag.LocationId = itemRequest.LocationId;
+        //    //ViewBag.ServiceProviderId = itemRequest.ServiceProviderId;
+        //    //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Username", itemRequest.CustomerId);
+        //    //ViewBag.ItemId = new SelectList(db.Items, "Id", "ItemName", itemRequest.ItemId);
+        //    //ViewBag.LocationId = new SelectList(db.Locations, "Id", "Type", itemRequest.LocationId);
+        //    //ViewBag.ServiceProviderId = new SelectList(db.ServiceProviders, "Id", "Username", itemRequest.ServiceProviderId);
+        //    return View(itemRequest);
+        //}
+
+        // POST: RespondMyRequests/Respond
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Respond([Bind(Include = "AcceptedDate,StatusId")] ItemRequest itemRequest)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(itemRequest).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+
+        //    ViewBag.StatusId = new SelectList(db.ItemRequestStatuses, "Id", "Name", itemRequest.StatusId);
+
+        //    //ViewBag.CustomerId = itemRequest.CustomerId;
+        //    //ViewBag.CustomerId = itemRequest.ItemId;
+        //    //ViewBag.LocationId = itemRequest.LocationId;
+        //    //ViewBag.ServiceProviderId = itemRequest.ServiceProviderId;
+        //    //ViewBag.CustomerId = new SelectList(db.Customers, "Id", "Username", itemRequest.CustomerId);
+        //    //ViewBag.ItemId = new SelectList(db.Items, "Id", "ItemName", itemRequest.ItemId);
+        //    //ViewBag.LocationId = new SelectList(db.Locations, "Id", "Type", itemRequest.LocationId);
+        //    //ViewBag.ServiceProviderId = new SelectList(db.ServiceProviders, "Id", "Username", itemRequest.ServiceProviderId);
+        //    return View(itemRequest);
+        //}
+
         // GET: ItemRequests/Create
         public ActionResult Create(int? id,string user,int? provider)
         {
@@ -165,7 +220,7 @@ namespace ConstructionLK.Controllers
             {
                 db.Entry(itemRequest).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("MyRequests", new { user=User.Identity.GetUserId()});
             }
             ViewBag.StatusId = new SelectList(db.ItemRequestStatuses, "Id", "Name", itemRequest.StatusId);
 

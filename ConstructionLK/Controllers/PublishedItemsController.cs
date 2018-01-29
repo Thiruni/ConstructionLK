@@ -8,6 +8,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using ConstructionLK.Models;
+using Microsoft.AspNet.Identity;
 
 namespace ConstructionLK.Controllers
 {
@@ -44,7 +45,8 @@ namespace ConstructionLK.Controllers
             ViewBag.UserId = user;
             //ViewBag.ItemId = new SelectList(db.Items, "Id", "ItemName");
             //ViewBag.UserId = new SelectList(db.ServiceProviders, "Id", "Username");
-            return View();
+           
+            return View("MyProducts", "Items", new { user = User.Identity.GetUserId() });
         }
 
         // POST: PublishedItems/Create

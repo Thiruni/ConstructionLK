@@ -21,7 +21,7 @@ namespace ConstructionLK.Controllers
         {
             var id = iid;
             string markers = "[";
-            string conString = ConfigurationManager.ConnectionStrings["ConstructionLKContext"].ConnectionString;
+            string conString = ConfigurationManager.ConnectionStrings["Azure"].ConnectionString;
             SqlCommand cmd = new SqlCommand("SELECT * FROM ItemLocations WHERE ItemId="+id+"");
             using (SqlConnection con = new SqlConnection(conString))
             {

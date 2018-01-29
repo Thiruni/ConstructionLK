@@ -1,46 +1,46 @@
 ﻿@model IEnumerable<ConstructionLK.Models.ItemRequest>
 
-<p>
+@*<p>
     @Html.ActionLink("Create New", "Create")
-</p>
+</p>*@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Customer.Username)
+            @Html.DisplayName("Customer")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Item.ItemName)
+            @Html.DisplayName("Item Name")
         </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.ItemRequestStatus.Name)
-        </th>
-        <th>
+        </th>*@
+        @*<th>
             @Html.DisplayNameFor(model => model.Location.Type)
-        </th>
-        <th>
+        </th>*@
+        @*<th>
             @Html.DisplayNameFor(model => model.ServiceProvider.Username)
+        </th>*@
+        <th>
+            @Html.DisplayName("Message")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Message)
+            @Html.DisplayName("Recieved Date")
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreatedDate)
-        </th>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.AcceptedDate)
-        </th>
-        <th>
+        </th>*@
+        @*<th>
             @Html.DisplayNameFor(model => model.ExpDate)
-        </th>
-        <th>
+        </th>*@
+        @*<th>
             @Html.DisplayNameFor(model => model.CompletedDate)
-        </th>
-        <th>
+        </th>*@
+        @*<th>
             @Html.DisplayNameFor(model => model.Latitude)
-        </th>
-        <th>
+        </th>*@
+        @*<th>
             @Html.DisplayNameFor(model => model.Longitude)
-        </th>
+        </th>*@
         <th></th>
     </tr>
 
@@ -48,44 +48,47 @@
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Customer.Username)
+
+            @*@Html.ActionLink((modelItem => item.Customer.Username), "MyProfile", "Customers", new { id = item.Customer.ApplicationUserId },null)*@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Item.ItemName)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.ItemRequestStatus.Name)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.DisplayFor(modelItem => item.Location.Type)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.DisplayFor(modelItem => item.ServiceProvider.Username)
-        </td>
+        </td>*@
         <td>
             @Html.DisplayFor(modelItem => item.Message)
         </td>
-        <td>
+        @*<td>
             @Html.DisplayFor(modelItem => item.CreatedDate)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.DisplayFor(modelItem => item.AcceptedDate)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.DisplayFor(modelItem => item.ExpDate)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.DisplayFor(modelItem => item.CompletedDate)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.DisplayFor(modelItem => item.Latitude)
-        </td>
-        <td>
+        </td>*@
+        @*<td>
             @Html.DisplayFor(modelItem => item.Longitude)
-        </td>
+        </td>*@
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Respond", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Go to Customer Profile","ProfileOut", "Customers", new { id = item.Customer.ApplicationUserId , requestid=item.Id })
+            @*@Html.ActionLink("Delete", "Delete", new { id=item.Id })*@
         </td>
     </tr>
 }

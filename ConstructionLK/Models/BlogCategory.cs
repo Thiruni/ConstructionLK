@@ -13,7 +13,7 @@ namespace ConstructionLK.Models
         {
             BlogPosts = new HashSet<BlogPost>();
         }
-
+        [Display(Name = "Category")]
         public int Id { get; set; }
 
         [Required]

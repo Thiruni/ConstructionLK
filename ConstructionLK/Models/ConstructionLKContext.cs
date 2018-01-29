@@ -11,7 +11,7 @@ namespace ConstructionLK.Models
         public ConstructionLKContext()
         //: base("name=ConstructionLKContext")
         //: base("name=Techwire")
-       : base("name=Azure")
+        : base("name=Azure")
         //: base("name=MRTVS")
         {
         }

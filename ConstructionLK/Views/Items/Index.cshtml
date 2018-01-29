@@ -6,28 +6,31 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style>
-    .text_filter{
-        width:100%;
-        min-width:200px;
+    .text_filter {
+        width: 100%;
+        min-width: 200px;
     }
+
     #new-search-area {
-        
         clear: both;
         padding-top: 20px;
         padding-bottom: 20px;
         -webkit-transition: width 0.4s ease-in-out;
         transition: width 0.4s ease-in-out;
     }
-    #new-search-area input {
-        width: 1500px;
-        font-size: 20px;
-        padding: 5px;
-    }
 
+        #new-search-area input {
+            width: 1500px;
+            font-size: 20px;
+            padding: 5px;
+        }
 </style>
 <h2>Items</h2>
 <p>
-    @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
+    @if (User.Identity.GetUserId() == ViewBag.user)
+    {
+        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-success" })
+    }
 </p>
 <div id="new-search-area" align="center"></div>
 @if (!Model.Any())
@@ -63,15 +66,23 @@ else
                             @price.Price
                         }
                     </td>
+                    @if (!(User.Identity.GetUserId() == ViewBag.user))
+                    {
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-outline-primary btn-sm" })|
+                            @Html.ActionLink("Buy this", "Create", "ItemRequests", new { id = item.Id, user = User.Identity.GetUserId(), provider = item.UserId }, new { @class = "btn btn-outline-warning btn-sm" })
+                        </td>
+                    }
 
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-primary btn-sm" }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-outline-primary btn-sm" }) |
-                        @Html.ActionLink("Review and Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-warning btn-sm" })|
-                        <button data-item-id="@item.Id" class="btn btn-outline-warning btn-sm js-delete">Delete Now</button>|
-                        @Html.ActionLink("Buy this", "Create","ItemRequests", new { id = item.Id, user = User.Identity.GetUserId(),provider=item.UserId }, new { @class = "btn btn-outline-warning btn-sm" })
-                        @*@Html.ActionLink("Buy this", "Buy", "Items", new {id = item.Id }, new { @class = "btn btn-outline-warning btn-sm"})*@
-                    </td>
+                    @if (User.Identity.GetUserId() == ViewBag.user)
+                    {
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-outline-primary btn-sm" })|
+                            @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-primary btn-sm" }) |
+                            @Html.ActionLink("Review and Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-warning btn-sm" })|
+                            <button data-item-id="@item.Id" class="btn btn-outline-warning btn-sm js-delete">Delete Now</button>|
+                        </td>
+                    }
                 </tr>
             }
         </tbody>
@@ -81,15 +92,14 @@ else
     <script>
         $(document).ready(function () {
             var table = $("#item").DataTable({
-                initComplete : function() {
+                initComplete: function () {
                     $("#item_filter").detach().appendTo('#new-search-area');
                 }
             });
             $("#item").on("click", ".js-delete", function () {
                 var button = $(this);
 
-                bootbox.confirm("Are you sure?", function(result)
-                {
+                bootbox.confirm("Are you sure?", function (result) {
                     if (result) {
                         $.ajax({
                             url: "/api/Items/" + button.attr("data-item-id"),

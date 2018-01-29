@@ -1,5 +1,4 @@
-﻿
-@using Microsoft.Ajax.Utilities
+﻿@using Microsoft.Ajax.Utilities
 @using Microsoft.AspNet.Identity
 @model ConstructionLK.Models.ServiceProvider
 
@@ -8,55 +7,100 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="well"><h2>@Html.DisplayFor(model => model.CompanyName)</h2></div>
+<div>
+    @if ((Model.Avatar == null))
+    {
+        <img src="~/Resources/ProfilePicturesSP/Default.png" alt="Profile Picture" height="200" width="200" align="right" />
+    }
+
+    @if (!(Model.Avatar == null))
+    {
+        <img src=@Url.Content(Model.Avatar) alt="Profile Picture" height="200" width="200" align="right" />
+    }
+
+</div>
+
+@if (Model.ApplicationUserId == User.Identity.GetUserId())
+{
 <div class="alert alert-dismissible alert-warning">
     <button type="button" class="close" data-dismiss="alert">&times;</button>
-    <h4>New Requests!</h4><strong>Access them now. @Html.ActionLink("Click Here", "MyRequests","ItemRequests",new { id = Model.Id },null)</strong>
+    <h4>New Requests!</h4><strong>Access them now.@Html.ActionLink("Click Here", "MyRequests", "ItemRequests", new { user = User.Identity.GetUserId() }, null)</strong>
 </div>
+<div class="col-md-2">
+    @Html.ActionLink("Accepted Item requests", "MyAcceptedRequests", "ItemRequests", new { user = User.Identity.GetUserId() }, null)
+</div>
+}
+
 <div>
     <span class="label label-warning">Service Provider</span>
     <span class="label label-primary">Cooperate</span>
     <span class="label label-info">
         Member since @Html.Label(Model.CreatedDate.Value.ToString("Y"))
     </span>
-        <hr />
-    @Html.ActionLink("Make Complaint", "Create", "Complains", new { user = Model.AspNetUser.Id }, new { @class = "btn btn-primary btn-xs" })
+    <hr />
+    @if (Model.TypeId == 3)
+    {
+        @Html.ActionLink("Make Complaint", "Create", "Complains", new { user = Model.AspNetUser.Id }, new { @class = "btn btn-primary btn-xs" })
+    }
+
+    @if (Model.ApplicationUserId == User.Identity.GetUserId())
+    {
+        @Html.ActionLink("New Post", "Create", "BlogPosts", new { user = User.Identity.GetUserId() }, null)
+        <strong>&nbsp;|&nbsp;</strong>
+        @Html.ActionLink("New Item", "Create", "Items", new { user = User.Identity.GetUserId() }, null)
+
+    }
+    @if (!(Model.ApplicationUserId == User.Identity.GetUserId()))
+    {
+        @Html.ActionLink("View Available Items", "Index", "Items", new { user = Model.AspNetUser.Id }, new { @class = "btn btn-primary btn-xs" })
+    }
     <div class="col-md-3">
         <ul class="list-group">
             <li class="list-group-item">
                 <strong>
-                    @Html.DisplayNameFor(model => model.Username)
+                    @Html.DisplayName("E-Mail")
                 </strong>
-                    |@Html.DisplayFor(model => model.Username)
+                |@Html.DisplayFor(model => model.Username)
             </li>
             <li class="list-group-item">
                 <strong>
-                    @Html.DisplayNameFor(model => model.BasedCity)
+                    @Html.DisplayName("Near by Town")
                 </strong>
-                    |@Html.DisplayFor(model => model.BasedCity)
+                |@Html.DisplayFor(model => model.BasedCity)
             </li>
             <li class="list-group-item">
                 <strong>
-                    @Html.DisplayNameFor(model => model.MailingAddress)
+                    @Html.DisplayName("Postal Address")
                 </strong>
-                    |@Html.DisplayFor(model => model.MailingAddress)
+                |@Html.DisplayFor(model => model.MailingAddress)
             </li>
-            <li class="list-group-item">
-                <strong>
-                    @Html.DisplayNameFor(model => model.Bio)
-                </strong>
 
-                   |@Html.DisplayFor(model => model.Bio)
+            <li class="list-group-item">
+
+                @if (Model.ApplicationUserId == User.Identity.GetUserId())
+                {
+                    <strong>
+                        @Html.DisplayName("Our Bio")
+                    </strong>
+                }
+                @if (!(Model.ApplicationUserId == User.Identity.GetUserId()))
+                {
+                    <strong>
+                        @Html.DisplayName("Service Provider Bio")
+                    </strong>
+                }
+                |@Html.DisplayFor(model => model.Bio)
             </li>
             <li class="list-group-item">
                 <strong>
                     @Html.DisplayNameFor(model => model.Telephone)
                 </strong>
 
-                    |@Html.DisplayFor(model => model.Telephone)
+                |@Html.DisplayFor(model => model.Telephone)
             </li>
             <li class="list-group-item">
                 <strong>
-                    @Html.DisplayNameFor(model => model.CompanyName)
+                    @Html.DisplayName("Company Name")
                 </strong>
 
                 |@Html.DisplayFor(model => model.CompanyName)
@@ -70,45 +114,45 @@
             </li>
             <li class="list-group-item">
                 <strong>
-                    @Html.DisplayNameFor(model => model.StartedDate)
+                    @Html.DisplayName("Date Incorporation")
                 </strong>
 
                 |@Html.DisplayFor(model => model.StartedDate)
             </li>
             @*show ratings*@
             @*<li class="list-group-item">
-                <strong>
-                    Ratings
-                </strong>
-                @Html.Partial("_LoginPartial")
-             
-            </li>*@
+                    <strong>
+                        Ratings
+                    </strong>
+                    @Html.Partial("_LoginPartial")
+
+                </li>*@
             <li class="list-group-item">
-                Last Modified On | @Html.LabelFor(model => model.ModifiedDate))
+                Last Modified On | @Html.LabelFor(model => model.ModifiedDate)
             </li>
         </ul>
     </div>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to Profile", "MyProfile", "ServiceProvidersCooperate", new { id = User.Identity.GetUserId() }, null) |
+    @Html.ActionLink("View Other Corporate service Providers ", "Index")
 </p>
 @*<script type="text/javascript">
-    var Userid = @Html.Raw(ViewBag.id.Id);
+        var Userid = @Html.Raw(ViewBag.id.Id);
 
-        $(function () {
-            $.ajax({
-                url: '/RatingsServiceProviders/showRatings'+ UserId,
-                dataType: "json",
-                type: "GET",
-                contentType: 'application/json; charset=utf-8',
-                async: false,
-                processData: false,
-                cache: false,
-                delay: 15,
-                success: function (data) {
-                        
-    }
+            $(function () {
+                $.ajax({
+                    url: '/RatingsServiceProviders/showRatings'+ UserId,
+                    dataType: "json",
+                    type: "GET",
+                    contentType: 'application/json; charset=utf-8',
+                    async: false,
+                    processData: false,
+                    cache: false,
+                    delay: 15,
+                    success: function (data) {
+
+        }
 
 
-</script>*@
+    </script>*@

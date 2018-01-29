@@ -11,7 +11,7 @@ namespace ConstructionLK.Models
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var serviceProvider = (ServiceProvider)validationContext.ObjectInstance;
-            if (serviceProvider.MembershipTypeId == MembershipType.Unknown || serviceProvider.MembershipTypeId == MembershipType.PayAsYouGo)
+            if (serviceProvider.TypeId==2||serviceProvider.MembershipTypeId == MembershipType.Unknown || serviceProvider.MembershipTypeId == MembershipType.PayAsYouGo)
             {
                 return ValidationResult.Success;
             }
