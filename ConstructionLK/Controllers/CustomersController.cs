@@ -45,6 +45,21 @@ namespace ConstructionLK.Controllers
             return View("MyProfile", customer);
             //return View();
         }
+
+
+        // customer profile for service provide
+        public ActionResult profileOut(string id, int? requestid)
+        {
+            ViewBag.requestid = requestid;
+            Customer customer = db.Customers.SingleOrDefault(i => i.ApplicationUserId == id);
+            if (customer == null)
+            {
+                return HttpNotFound();
+            }
+            
+            return View(customer);
+        }
+
         // GET: Customers
         public ActionResult Index()
         {

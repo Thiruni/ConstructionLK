@@ -133,11 +133,11 @@ namespace ConstructionLK.Controllers
         }
 
         //showing ratings in profile
-        public ActionResult showRatings(int? id)
+        public ActionResult showRatingsForServiceProvider(int? id)
         {
             var avgRatings = db.RatingsServiceProviders.Where(c => c.Id == id).Average(c => c.Rate);
             ViewBag.AvgRatings = avgRatings;
-            return View("RatingsForProfileView", "Shared");
+            return View("showRatingsForServiceProvider");
         }
 
         protected override void Dispose(bool disposing)

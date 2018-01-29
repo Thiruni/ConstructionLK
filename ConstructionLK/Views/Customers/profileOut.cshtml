@@ -3,7 +3,7 @@
 @model ConstructionLK.Models.Customer
 
 @{
-    ViewBag.Title = "Profile";
+    ViewBag.Title = "profileOut";
     Layout = "~/Views/Shared/_LayoutProfile.cshtml";
 }
 <div class="well"><h2>@Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.LastName)</h2></div>
@@ -13,7 +13,7 @@
         <span class="label label-info">Member since @Html.Label(Model.CreatedDate.ToString("Y"))</span>
     </p>
 
-    
+
 
 
     <ul class="list-group">
@@ -40,5 +40,8 @@
         </li>
     </ul>
 </div>
-<div class="col-md-9">@Html.ActionLink("My requests", "UserIndex", "ItemRequests", new { id = Model.Id }, new { @class = "btn btn-primary btn-xs" }) @Html.ActionLink("View Ratings", "showRatings", "ratingsCustomers", new { id = Model.Id }, new { @class = "btn btn-primary btn-xs" })
-<hr /></div>
+<div class="col-md-9">
+     @Html.ActionLink("View Ratings", "showRatings", "ratingsCustomers", new { id = Model.Id }, new { @class = "btn btn-primary btn-xs" })
+    @Html.ActionLink("Rate now", "Create", "ratingCustomer", new { receivedUser = Model.Id, postUser = User.Identity.GetUserId(), id = }, new { @class = "btn btn-primary btn-xs" })
+    <hr />
+</div>
